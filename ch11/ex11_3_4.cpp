@@ -12,72 +12,40 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <string.h>
-#include <set>
 #include <algorithm>
+#include <cctype>
 
-//! Exercise 11.4:
-void
-w_count_pro(std::map<std::string, int> &m);
-
-void
-ex11_3(void);
-
-int main()
+//! Exercise 11.4
+void word_count_pro(std::map<std::string, int>& m)
 {
-    std::map<std::string, int> m;
-    w_count_pro(m);
-
-    return 0;
+    std::string word;
+    while (std::cin >> word) {
+        for (auto& ch : word) ch = tolower(ch);
+        //! According to the erase-remove idiom.
+        //! For more information about the erase-remove idiom, please refer to
+        //! http://en.wikipedia.org/wiki/Erase-remove_idiom
+        word.erase(std::remove_if(word.begin(), word.end(), ispunct),
+                   word.end());
+        ++m[word];
+    }
+    for (const auto& e : m) std::cout << e.first << " : " << e.second << "\n";
 }
 
-
-
+//! Exercise 11.3
 void ex11_3()
 {
     std::map<std::string, std::size_t> word_count;
     std::string word;
-    while(std::cin >> word && word != "@q")
-    {
-        ++word_count[word];
-        for (const auto &e : word_count)
-            std::cout << e.first << " : " << e.second <<"\n";
-    }
+    while (std::cin >> word) ++word_count[word];
 
+    for (const auto& elem : word_count)
+        std::cout << elem.first << " : " << elem.second << "\n";
 }
 
-//! Exercise 11.4:
-//! Extend your program to ignore case and punctuation.
-//! For example, “example.” “example,” and “Example” should
-//! all increment the same counter.
-void
-w_count_pro(std::map<std::string, int> &m)
+int main()
 {
-    std::string word;
+    std::map<std::string, int> m;
+    word_count_pro(m);
 
-    while(std::cin >> word && word != "@q")
-    {
-        //! convert to lowercase
-        for(std::size_t i=0; i != word.size(); ++i)
-        {
-            word[i] = ::tolower(word[i]);
-        }
-
-
-        //! delete ',' or '.'
-        auto punc_iter = std::find_if(word.begin(), word.end(),[] (const char c)
-        {
-            return c == '.' || c == ',';
-        });
-
-        if(punc_iter != word.end())
-            word.erase(punc_iter);
-
-        //! read into the map m
-        ++m[word];
-
-        //! print contents of m
-        for (const auto &e : m)
-            std::cout << e.first << " : " << e.second <<"\n";
-    }
+    return 0;
 }

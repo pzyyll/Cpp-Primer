@@ -1,59 +1,39 @@
-//! @Alan
-//!
-//! Exercise 11.31:
-//! Write a program that defines a multimap of authors and their works.
-//! Use find to find an element in the multimap and erase that element.
-//      ^^^^         ^^^^^^^^^^
-//! Be sure your program works correctly if the element you look for is
-//! not in the map.
-//!
+//
+//  ex11_31.cpp
+//  Exercise 11.31
+//
+//  Created by pezy on 12/17/14.
+//  Copyright (c) 2014 pezy. All rights reserved.
+//
+//  Write a program that defines a multimap of authors and their works.
+//  Use **find** to find **an element** in the multimap and erase that element.
+//  Be sure your program works correctly if the element you look for is not in
+//  the map.
 
 #include <iostream>
 #include <map>
 #include <string>
-#include <algorithm>
-#include <vector>
 
-//!
-//! \brief remove_works     for ex 11.31
-//! \param s                the key value to be removed
-//! \param m                the multi map to be operated on
-//!
-//! this funciton just erase the first matching element.
-void
-remove_works(const std::string &s, std::multimap<std::string, std::string> &m);
+using std::string;
 
 int main()
 {
-    //! define the multimap
-    std::multimap<std::string, std::string> m = {{"Alan","111"},{"Alan","112"},{"Alan","113"},{"Wang","222"}};
+    std::multimap<string, string> authors{
+        {"alan", "DMA"}, {"pezy", "LeetCode"}, {"alan", "CLRS"},
+        {"wang", "FTP"}, {"pezy", "CP5"},      {"wang", "CPP-Concurrency"},
+        {"pezy", "CP5"}};
+    // want to delete an element that author is [pezy], work is [CP5].
+    string author = "pezy";
+    string work = "CP5";
 
-    //! print the content
-    for(const auto &e : m)
-        std::cout << e.first << " " << e.second <<"\n";
+    for (auto found = authors.find(author);
+         found != authors.end() && found->first == author;) {
+        if (found->second == work)
+            found = authors.erase(found);
+        else
+            ++found;
+    }
 
-    std::cout <<"====================\n";
-
-    //! call the function to do as required.
-    remove_works("Alan",m);
-
-    //! print the content
-    for(const auto &e : m)
-        std::cout << e.first << " " << e.second <<"\n";
-
-    return 0;
-}
-
-
-void
-remove_works(const std::string &s, std::multimap<std::string, std::string> &m)
-{
-    std::multimap<std::string, std::string>::iterator it = m.find(s);
-//!                                                          ^^^^
-//!If successful the function returns an iterator pointing to the sought after %pair.
-//!If unsuccessful it returns the past-the-end ( @c end() ) iterator.
-
-    if(it != m.end())   m.erase(it);
-    //!                         ^^
-    //! @param  __position  An iterator pointing to the element to be erased.
+    for (const auto& author : authors)
+        std::cout << author.first << " " << author.second << std::endl;
 }

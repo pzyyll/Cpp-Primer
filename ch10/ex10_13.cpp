@@ -1,4 +1,4 @@
-//! @Alan
+//! @Yue Wang
 //!
 //! Exercise 10.13:
 //! The library defines an algorithm named partition that takes a predicate
@@ -15,38 +15,20 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <numeric>
 
-//! Predicate
-inline bool
-isLargerThan5(const std::string &s);
-
-void
-partition_words(std::vector<std::string> &v);
-int main()
-{
-    std::vector<std::string> v={"a","as","aasss","aaaaassaa","aaaaaabba","aaa"};
-    partition_words(v);
-
-    return 0;
-}
-
-
-inline bool
-isLargerThan5(const std::string &s)
+bool predicate(const std::string& s)
 {
     return s.size() >= 5;
 }
 
-
-void
-partition_words(std::vector<std::string> &v)
+int main()
 {
-    auto it_largerLast = std::partition(v.begin(), v.end(), isLargerThan5);
+    auto v = std::vector<std::string>{"a",         "as",        "aasss",
+                                      "aaaaassaa", "aaaaaabba", "aaa"};
+    auto pivot = std::partition(v.begin(), v.end(), predicate);
 
-    //! @note   the range to be printed not whole of the v, so can't use for range.
-    for(auto it = v.begin(); it != it_largerLast; ++it)
-        std::cout << *it << " ";
+    for (auto it = v.cbegin(); it != pivot; ++it) std::cout << *it << " ";
+    std::cout << std::endl;
 
-    std::cout << "\n";
+    return 0;
 }
